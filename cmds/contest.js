@@ -96,12 +96,11 @@ module.exports.run = async(client, message, args, db) => {
         let embed = new Discord.RichEmbed()
         .setAuthor('Contest!', 'https://ice-creme.de/images/jabstat/public-icon.jpg')
         .setTitle(contest.name)
-        .setDescription(`${contest.description}\n\nadd \`>contest submit ${contest.id}\` to your submission\n\n24 hour voting will start after the deadline.${voteLinkStr}\n\n*Date: DD.MM.YYYY UTC*`)
+        .setDescription(`${contest.description}\n\nadd \`>contest submit ${contest.id}\` to your submission\n\n24 hour voting will start after the deadline.${voteLinkStr}`)
         .setColor('#3498db')
-        .addBlankField()
         .addField('Start', startdate.dateStr, true)
         .addField('Deadline', enddate.dateStr, true)
-        .setFooter(`beep boop • contest ID: ${contest.id}`, client.user.avatarURL);
+        .setFooter(`beep boop • contest ID: ${contest.id} • Dates: dd.mm.yyyy UTC`, client.user.avatarURL);
 
         let participantEmbed = new Discord.RichEmbed()
         .setDescription('click on the names to see the submission')
@@ -191,12 +190,11 @@ module.exports.run = async(client, message, args, db) => {
         let embed = new Discord.RichEmbed()
         .setAuthor('Contest!', 'https://ice-creme.de/images/jabstat/public-icon.jpg')
         .setTitle(contest.name)
-        .setDescription(`${contest.description}\n\nadd \`>contest submit ${contest.id}\` to your submission\n\n24 hour voting will start after the deadline.${voteLinkStr}\n\n*Date: DD.MM.YYYY UTC*`)
+        .setDescription(`${contest.description}\n\nadd \`>contest submit ${contest.id}\` to your submission\n\n24 hour voting will start after the deadline.${voteLinkStr}`)
         .setColor('#3498db')
-        .addBlankField()
         .addField('Start', startdate.dateStr, true)
         .addField('Deadline', enddate.dateStr, true)
-        .setFooter(`beep boop • contest ID: ${contest.id}`, client.user.avatarURL);
+        .setFooter(`beep boop • contest ID: ${contest.id} • Dates: dd.mm.yyyy UTC`, client.user.avatarURL);
 
         let participantEmbed = new Discord.RichEmbed()
         .setDescription('click on the names to see the submission')
@@ -241,7 +239,6 @@ module.exports.run = async(client, message, args, db) => {
     message.reply('please provide a proper contest Id');
     return message.delete();
   }
-  if (!submission) return message.reply('please add an attachment to your submission');
 
   db.execute(config, database => database.query(`SELECT * FROM cont_contests WHERE active = 1 AND id = '${contestId}'`)
   .then(rows => {
@@ -256,6 +253,8 @@ module.exports.run = async(client, message, args, db) => {
     } else if (contest.enddate < currentDate) {
       throw new Error('contest over');
     }
+
+    if (!submission) return message.reply('please add an attachment to your submission');
 
     return database.query(`SELECT * FROM cont_submissions WHERE contestId = '${contest.id}' AND userId = '${message.author.id}'`);
   })
@@ -390,7 +389,7 @@ module.exports.run = async(client, message, args, db) => {
       } else {
         // future contest
         // contests.push(`\`${contest.id}\` | \t${contest.name}`);
-        contests.push(`\`${contest.id}\` | \t||secret 👀||`);
+        contests.push(`\`${contest.id}\` | \t||tba 👀||`);
       }
     });
   })
@@ -541,13 +540,13 @@ module.exports.run = async(client, message, args, db) => {
         let embed = new Discord.RichEmbed()
         .setAuthor('Voting!', 'https://ice-creme.de/images/jabstat/voting.jpg')
         .setTitle(`Contest: ${contest.name}`)
-        .setDescription(`${contest.description}\n\nyou have 24 hours to vote.\nVoting will end at ${tomorrow}\n*Date: DD.MM.YYYY UTC*`)
+        .setDescription(`${contest.description}\n\nyou have 24 hours to vote.\nVoting will end at ${tomorrow}`)
         .setColor('#2ecc71')
         .addBlankField()
         .addField('Themes:', `${themes.join('\n')}`)
         .addBlankField()
         .addField('Submissions:', `*use the reactions to vote*\n${participantString.join('\n')}`)
-        .setFooter(`beep boop • contest ID: ${contest.id}`, client.user.avatarURL);
+        .setFooter(`beep boop • contest ID: ${contest.id} • Dates: dd.mm.yyyy UTC`, client.user.avatarURL);
 
         message.channel.send(`<@${contestRole}>`).then(msg => {
           message.channel.send({embed: embed}).then(msg => {
